@@ -14,8 +14,10 @@ make clean
 ./sensorgnome-dockcross -i $IMG \
     make -j4 install DESTDIR=$DESTDIR STRIP=armv7-unknown-linux-gnueabi-strip
 
+# Boilerplate package generation
 cp -r DEBIAN $DESTDIR
+sed -e "/^Version/s/:.*/: $(date +%Y.%j)/" -i $DESTDIR/DEBIAN/control # set version: YYYY.DDD
 mkdir -p packages
-dpkg-deb -v --build $DESTDIR packages/vamp-alsa-host.deb
-# dpkg-deb --contents packages/vamp-alsa-host.deb
-ls -lh packages/vamp-alsa-host.deb
+dpkg-deb --root-owner-group --build $DESTDIR packages
+# dpkg-deb --contents packages
+ls -lh packages
